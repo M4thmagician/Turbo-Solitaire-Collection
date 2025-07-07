@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higher or Lower Solitaire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Transitions for a smoother feel */
+        button, .main-menu-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            will-change: transform, top, left;
+        }
+        .pile {
+            transition: background-color 0.3s ease;
+        }
+        /* Style for the card that breaks the streak */
+        .card-error {
+            border-color: #ef4444; /* red-500 */
+            box-shadow: 0 0 15px 5px rgba(239, 68, 68, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <a href="../index.html" class="main-menu-btn absolute top-4 left-4 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-lg z-50">
+        &larr; Main Menu
+    </a>
+
+    <div id="game-container" class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-2xl mt-12">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Higher or Lower Solitaire 🃏</h1>
+            <p class="text-slate-500 mt-2">Guess if the next card is higher or lower. Finish the deck in the fewest piles!</p>
+        </header>
+
+        <div id="options" class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label for="suit-select" class="font-medium text-slate-700">Suits:</label>
+                    <select id="suit-select" class="rounded-md border-slate-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="1">♠</option>
+                        <option value="2">♠ ♥</option>
+                        <option value="3">♠ ♥ ♦</option>
+                        <option value="4" selected>♠ ♥ ♦ ♣</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="tracker-toggle" class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" checked>
+                    <label for="tracker-toggle" class="text-slate-700">Show Cards Left</label>
+                </div>
+                <button id="start-game" class="w-full sm:w-auto bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg">Start Game</button>
+            </div>
+        </div>
+
+        <div id="game-board" class="hidden">
+            <div id="card-chain-container" class="relative h-64 md:h-72 flex justify-center items-start mb-6">
+                </div>
+            <div id="controls" class="flex justify-center gap-4 mb-4">
+                <button id="higher-btn" class="bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md">Higher</button>
+                <button id="lower-btn" class="bg-red-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-md">Lower</button>
+            </div>
+            <div id="cards-left-tracker" class="text-center text-slate-500 font-medium text-lg"></div>
+        </div>
+        
+        <div id="piles-container-wrapper" class="mt-8">
+             <h2 class="text-xl font-semibold text-slate-700 text-center mb-4">Completed Piles</h2>
+             <div id="piles-container" class="flex flex-wrap justify-center gap-3 bg-slate-100 p-4 rounded-lg min-h-[100px]">
+                <p id="no-piles-message" class="text-slate-400">No piles yet. Good luck!</p>
+             </div>
+        </div>
+
+    </div>
+    
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-40">
+        <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-sm w-full">
+            <h2 id="modal-title" class="text-2xl font-bold text-slate-800 mb-4"></h2>
+            <p id="modal-body" class="text-slate-600 mb-6"></p>
+            <button id="modal-close" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Play Again</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- DOM Element Selection ---
+        const suitSelect = document.getElementById('suit-select');
+        const trackerToggle = document.getElementById('tracker-toggle');
+        const startGameBtn = document.getElementById('start-game');
+        const gameBoard = document.getElementById('game-board');
+        const cardChainContainer = document.getElementById('card-chain-container');
+        const higherBtn = document.getElementById('higher-btn');
+        const lowerBtn = document.getElementById('lower-btn');
+        const controls = document.getElementById('controls');
+        const cardsLeftTracker = document.getElementById('cards-left-tracker');
+        const pilesContainer = document.getElementById('piles-container');
+        const noPilesMessage = document.getElementById('no-piles-message');
+        const optionsPanel = document.getElementById('options');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const modalClose = document.getElementById('modal-close');
+
+        // --- Game State Variables ---
+        let deck = [];
+        let currentCardIndex = 0;
+        let currentPile = [];
+        let piles = [];
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+        // --- Game Logic Functions ---
+
+        const createDeck = (numSuits) => {
+            deck = [];
+            const selectedSuits = suits.slice(0, numSuits);
+            for (const suit of selectedSuits) {
+                for (let i = 0; i < values.length; i++) {
+                    deck.push({ suit, value: values[i], rank: i });
+                }
+            }
+        };
+
+        const shuffleDeck = () => {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        };
+
+        const createCardHTML = (card, isError = false) => {
+            const corner = (c, r = false) => `<div class="absolute ${r ? 'bottom-1 right-2 rotate-180' : 'top-1 left-2'} flex flex-col items-center leading-none text-xl font-bold"><span>${c.value}</span><span>${c.suit}</span></div>`;
+            const pip = (r=false) => `<div class="text-3xl md:text-4xl ${r ? 'rotate-180' : ''}">${card.suit}</div>`;
+            let pipsLayout = '';
+            switch (card.value) {
+                case 'A': pipsLayout = `<div class="flex justify-center items-center h-full"><div class="text-7xl md:text-8xl">${card.suit}</div></div>`; break;
+                case 'K': case 'Q': case 'J': pipsLayout = `<div class="flex justify-center items-center h-full"><div class="w-16 h-24 md:w-20 md:h-28 border-2 rounded-md flex justify-center items-center text-5xl">${card.value}</div></div>`; break;
+                case '10': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip()}${pip()}${pip()}</div><div class="flex flex-col justify-center items-center gap-8">${pip()}${pip(true)}</div><div class="flex flex-col justify-between">${pip(true)}${pip(true)}${pip(true)}${pip(true)}</div></div>`; break;
+                case '9': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip()}${pip()}${pip()}</div><div class="flex flex-col justify-center">${pip()}</div><div class="flex flex-col justify-between">${pip(true)}${pip(true)}${pip(true)}${pip(true)}</div></div>`; break;
+                case '8': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip()}${pip()}</div><div class="flex flex-col justify-center items-center gap-12">${pip()}${pip(true)}</div><div class="flex flex-col justify-between">${pip(true)}${pip(true)}${pip(true)}</div></div>`; break;
+                case '7': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip()}</div><div class="flex flex-col justify-center items-center gap-4 pt-4">${pip()}${pip(true)}${pip(true)}</div><div class="flex flex-col justify-between">${pip()}${pip()}</div></div>`; break;
+                case '6': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip()}${pip()}</div><div class="flex flex-col justify-between">${pip(true)}${pip(true)}${pip(true)}</div></div>`; break;
+                case '5': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip(true)}</div><div class="flex flex-col justify-center">${pip()}</div><div class="flex flex-col justify-between">${pip()}${pip(true)}</div></div>`; break;
+                case '4': pipsLayout = `<div class="flex justify-between h-full"><div class="flex flex-col justify-between">${pip()}${pip(true)}</div><div class="flex flex-col justify-between">${pip()}${pip(true)}</div></div>`; break;
+                case '3': pipsLayout = `<div class="flex flex-col justify-between items-center h-full">${pip()}${pip()}${pip(true)}</div>`; break;
+                case '2': pipsLayout = `<div class="flex flex-col justify-between items-center h-full">${pip()}${pip(true)}</div>`; break;
+                default: pipsLayout = `<div class="flex justify-center items-center h-full">${pip()}</div>`;
+            }
+            const colorClass = (card.suit === '♥' || card.suit === '♦') ? 'text-red-500' : 'text-black';
+            const errorClass = isError ? 'card-error' : '';
+            return `<div class="card absolute w-32 h-48 md:w-40 md:h-56 border-2 border-slate-300 rounded-xl bg-white ${colorClass} ${errorClass}">${corner(card)}<div class="w-full h-full p-6 md:p-8">${pipsLayout}</div>${corner(card, true)}</div>`;
+        };
+        
+        const displayCardChain = (errorCard = null) => {
+            cardChainContainer.innerHTML = '';
+            const cardsToDisplay = [...currentPile];
+            if (!errorCard && currentCardIndex < deck.length) {
+                cardsToDisplay.push(deck[currentCardIndex]);
+            }
+
+            cardsToDisplay.forEach((card, index) => {
+                if (!card) return;
+                const cardEl = document.createElement('div');
+                cardEl.innerHTML = createCardHTML(card);
+                cardEl.style.top = `${index * 20}px`;
+                cardEl.style.left = `calc(50% - 64px)`; 
+                if (window.innerWidth >= 768) { 
+                     cardEl.style.left = `calc(50% - 80px)`;
+                }
+                cardChainContainer.appendChild(cardEl);
+            });
+
+            if (errorCard) {
+                const cardEl = document.createElement('div');
+                cardEl.innerHTML = createCardHTML(errorCard, true);
+                const index = cardsToDisplay.length;
+                cardEl.style.top = `${index * 20}px`;
+                cardEl.style.left = `calc(50% - 64px)`;
+                 if (window.innerWidth >= 768) {
+                     cardEl.style.left = `calc(50% - 80px)`;
+                }
+                cardChainContainer.appendChild(cardEl);
+            }
+        };
+
+        const updateCardsLeftTracker = () => {
+            if (trackerToggle.checked) {
+                const cardsLeft = deck.length - (currentCardIndex + currentPile.length);
+                cardsLeftTracker.textContent = `Cards Left: ${cardsLeft < 0 ? 0 : cardsLeft}`;
+                cardsLeftTracker.style.display = 'block';
+            } else {
+                cardsLeftTracker.style.display = 'none';
+            }
+        };
+
+        const handleGuess = (guess) => {
+            const activeCardIndex = currentCardIndex + currentPile.length;
+            if (activeCardIndex >= deck.length) return;
+
+            const currentCard = deck[activeCardIndex -1];
+            const nextCard = deck[activeCardIndex];
+            
+            let isCorrect = (nextCard.rank > currentCard.rank && guess === 'higher') || (nextCard.rank < currentCard.rank && guess === 'lower');
+
+            if (nextCard.rank === currentCard.rank) { // Handle ties
+                 currentPile.push(nextCard);
+                 displayCardChain();
+                 updateCardsLeftTracker();
+                 return;
+            }
+            
+            if (isCorrect) {
+                currentPile.push(nextCard);
+                displayCardChain();
+            } else {
+                controls.style.pointerEvents = 'none';
+                displayCardChain(nextCard);
+
+                setTimeout(() => {
+                    currentPile.push(nextCard); 
+                    piles.push(currentPile);
+                    currentCardIndex += currentPile.length;
+                    currentPile = [];
+                    updatePilesDisplay();
+                    
+                    if (currentCardIndex < deck.length) {
+                        displayCardChain();
+                        controls.style.pointerEvents = 'auto';
+                    } else {
+                        endGame();
+                    }
+                }, 1200);
+            }
+            updateCardsLeftTracker();
+        };
+
+        const updatePilesDisplay = () => {
+            pilesContainer.innerHTML = ''; 
+            if (piles.length === 0) {
+                 pilesContainer.innerHTML = `<p id="no-piles-message" class="text-slate-400">No piles yet. Good luck!</p>`;
+            } else {
+                piles.forEach((pile, index) => {
+                    const pileEl = document.createElement('div');
+                    pileEl.className = 'pile bg-slate-200 text-slate-600 rounded-md p-2 text-center text-sm font-medium shadow';
+                    pileEl.textContent = `Pile ${index + 1}: ${pile.length} cards`;
+                    pilesContainer.appendChild(pileEl);
+                });
+            }
+        };
+        
+        const showModal = (title, body) => {
+            modalTitle.textContent = title;
+            modalBody.textContent = body;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        const endGame = () => {
+            if (currentPile.length > 0) {
+                piles.push(currentPile);
+            }
+            updatePilesDisplay();
+            showModal('🎉 Congratulations! 🎉', `You finished the deck in ${piles.length} piles.`);
+            controls.style.pointerEvents = 'none';
+        };
+        
+        const resetGame = () => {
+            gameBoard.style.display = 'none';
+            optionsPanel.style.display = 'block';
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pilesContainer.innerHTML = `<p id="no-piles-message" class="text-slate-400">No piles yet. Good luck!</p>`;
+            controls.style.pointerEvents = 'auto';
+        }
+
+        // --- Event Listeners ---
+        startGameBtn.addEventListener('click', () => {
+            createDeck(parseInt(suitSelect.value));
+            shuffleDeck();
+            
+            currentCardIndex = 0;
+            currentPile = [deck[0]]; // Start the first pile with the first card
+            piles = [];
+            
+            updatePilesDisplay();
+            optionsPanel.style.display = 'none';
+            gameBoard.style.display = 'block';
+            controls.style.pointerEvents = 'auto';
+            displayCardChain();
+            updateCardsLeftTracker();
+        });
+
+        higherBtn.addEventListener('click', () => handleGuess('higher'));
+        lowerBtn.addEventListener('click', () => handleGuess('lower'));
+        trackerToggle.addEventListener('change', updateCardsLeftTracker);
+        modalClose.addEventListener('click', resetGame);
+
+    </script>
+
+</body>
+</html>
