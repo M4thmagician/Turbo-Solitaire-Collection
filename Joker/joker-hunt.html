@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Joker!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="joker-styles.css">
+    <!-- Optional: Keep if you might use Tailwind utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- Game Container -->
+    <div class="game-container">
+        <h1>Find the Joker!</h1>
+        <!-- Settings -->
+        <div class="settings-container">
+            <label for="board-size-select" class="settings-title">Board Size:</label>
+            <select id="board-size-select">
+                <option value="4">2x2 (4)</option>
+                <option value="9" selected>3x3 (9)</option> <!-- Default Selected -->
+                <option value="16">4x4 (16)</option>
+                <option value="25">5x5 (25)</option>
+                <option value="36">6x6 (36)</option>
+                <option value="49">7x7 (49)</option>
+                <option value="64">8x8 (64)</option>
+            </select>
+            <label class="marking-mode-label">
+                <input type="checkbox" id="marking-mode-checkbox">
+                Marking Mode
+            </label>
+        </div>
+        <!-- Card Grid (will be populated by JS) -->
+        <div id="card-grid"></div>
+        <!-- Win Message -->
+        <div class="win-message" style="display: none;">You found the Joker!</div>
+        <!-- Reset Button -->
+        <button class="reset-button">Reset Game</button>
+        <!-- Main Menu Button -->
+        <a href="../index.html" class="back-button">Back to Menu</a>
+    </div>
+
+
+    <!-- Link to the main JavaScript module -->
+    <!-- IMPORTANT: Place this at the end of the body -->
+    <script type="module" src="joker-app.js"></script>
+</body>
+</html>

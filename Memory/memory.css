@@ -1,0 +1,111 @@
+/* Apply the game font */
+body, button, .card {
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Basic card styling */
+.card {
+    width: 80px;
+    height: 120px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    background-color: #4a90e2;
+    color: #ffffff;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.card.revealed {
+    background-color: #ffffff;
+    color: #000000;
+}
+.card.revealed:not([data-rank="A"]) {
+    cursor: default;
+}
+body:has(#game-board[data-locked="true"]) .card.revealed[data-rank="A"] {
+    cursor: pointer;
+}
+body:not(:has(#game-board[data-locked="true"])) .card.revealed[data-rank="A"] {
+    cursor: default;
+}
+
+.card.correct {
+    background-color: #f0f0f0;
+    color: #333;
+    border-color: #22c55e;
+}
+
+.card-back-symbol {
+    font-size: 36px;
+}
+
+.suit {
+    position: absolute;
+    font-size: 16px;
+}
+.suit-top-left {
+    top: 5px;
+    left: 5px;
+}
+.suit-bottom-right {
+    bottom: 5px;
+    right: 5px;
+    transform: rotate(180deg);
+}
+
+.grid > * {
+    flex-shrink: 0;
+}
+
+button {
+    padding: 10px 20px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background-color: #facc15;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px #92400e;
+    margin-top: 5px;
+}
+button:active {
+    box-shadow: 0 2px #92400e;
+    transform: translateY(2px);
+}
+button:hover {
+    background-color: #eab308;
+}
+
+/* Style for the Back to Menu button */
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background-color: #38bdf8; /* Sky blue */
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px #0e7490;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-decoration: none;
+    text-align: center;
+}
+.back-button:active {
+    box-shadow: 0 2px #0e7490;
+    transform: translateY(2px);
+}
+.back-button:hover {
+    background-color: #0ea5e9;
+}
+

@@ -1,0 +1,66 @@
+/* css/menu-styles.css */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #6fa8dc, #8e7cc3); /* Gradient background */
+    font-family: 'Press Start 2P', cursive;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.menu-container {
+    background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent background */
+    padding: 2rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav li {
+    margin-bottom: 1rem;
+}
+
+.game-link {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #f59e0b; /* Amber */
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.game-link:hover {
+    background-color: #d97706; /* Darker Amber */
+    transform: scale(1.05);
+}
+
+/* Responsive font size for title */
+@media (max-width: 600px) {
+    h1 { font-size: 1.5rem; }
+    p { font-size: 0.9rem; }
+    .game-link { font-size: 0.9rem; padding: 0.7rem 1.2rem; }
+    .menu-container { padding: 1.5rem 2rem; }
+}

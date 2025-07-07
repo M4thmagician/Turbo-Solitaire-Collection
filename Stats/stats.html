@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Statistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/stats-styles.css">
+</head>
+<body>
+    <div class="stats-container">
+        <h1>Game Statistics</h1>
+
+        <div class="controls">
+            <div class="select-group">
+                <label for="game-select">Select Game:</label>
+                <select id="game-select">
+                    <option value="">-- Select Game --</option>
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+            <div class="select-group">
+                <label for="size-select">Select Board Size:</label>
+                <select id="size-select" disabled>
+                    <option value="">-- Select Size --</option>
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+        </div>
+
+        <div id="stats-display">
+            <p>Please select a game and board size to view stats.</p>
+            <!-- Stats will be displayed here -->
+        </div>
+
+        <div class="actions">
+             <button id="reset-selected-stats-button" disabled>Reset Selected Stats</button>
+             <button id="reset-all-stats-button">Reset ALL Stats</button>
+             <a href="../index.html" id="back-to-menu" class="back-button">Back to Menu</a>
+        </div>
+
+    </div>
+
+    <script type="module" src="js/stats-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+/* css/chess-solitaire-styles.css */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align content to top */
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-family: 'Press Start 2P', cursive;
+    margin: 0;
+    padding: 20px;
+    background-image: url('https://images.unsplash.com/photo-1513020271533-72376530f91b?q=80&w=1974&auto=format&fit=crop&ixlib.rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box; /* Include padding in element dimensions */
+}
+
+h1 {
+    color: #ffffff; /* Changed to white for better visibility on background */
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5); /* Enhanced shadow */
+}
+
+.controls-container {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem; /* Space between control groups */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+#reset-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: #f59e0b; /* Amber */
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+    /* margin-bottom: 1rem; Removed, using gap in container */
+    /* z-index: 2; Controlled by container */
+}
+#reset-button:hover {
+    background-color: #d97706; /* Darker Amber */
+    transform: scale(1.03);
+    box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+}
+#reset-button:active {
+    transform: scale(0.98); /* Click effect */
+}
+.back-button {
+    display: inline-block; /* Allow padding/margins */
+    padding: 0.75rem 1.5rem; /* Match reset button size */
+    font-size: 0.8rem; /* Match reset button font size */
+    background-color: #60a5fa; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Match reset button border-radius */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Match reset button shadow */
+    text-decoration: none; /* Remove underline */
+    text-align: center;
+    /* margin-top: 0.5rem; Adjust if needed based on flex layout */
+}
+
+.back-button:hover {
+    background-color: #3b82f6; /* Darker blue */
+    transform: scale(1.03); /* Match reset button hover scale */
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); /* Match reset button hover shadow */
+    text-decoration: none;
+    color: white;
+}
+
+.back-button:active {
+     transform: scale(0.98); /* Match reset button active scale */
+}
+
+#game-board {
+    display: grid;
+    /* grid-template-columns/rows set by JS */
+    gap: 5px;
+    margin-bottom: 1rem;
+    width: 90vw;
+    max-width: 450px;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    /* Add checkerboard background */
+    --grid-dim: 4; /* Default, will be updated by JS if size changes */
+    --cell-size: calc(100% / var(--grid-dim));
+    --checker-color-light: #f0d9b5; /* Light wood/square */
+    --checker-color-dark: #b58863;  /* Dark wood/square */
+    background-color: var(--checker-color-dark); /* Fallback */
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--checker-color-light) 25%,
+        transparent 25%,
+        transparent 75%,
+        var(--checker-color-light) 75%,
+        var(--checker-color-light)
+    ),
+    repeating-linear-gradient(
+        45deg,
+        var(--checker-color-light) 25%,
+        transparent 25%,
+        transparent 75%,
+        var(--checker-color-light) 75%,
+        var(--checker-color-light)
+    );
+    background-position: 0 0, var(--cell-size) var(--cell-size);
+    background-size: calc(2 * var(--cell-size)) calc(2 * var(--cell-size));
+    /* Add a border around the whole board */
+    border: 5px solid #6f4e37; /* Darker wood border */
+    padding: 5px; /* Padding inside the border, outside the cards */
+    box-sizing: border-box; /* Include padding/border in size */
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem; /* Base font size */
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    background-color: #fed7aa; /* Orange-200 */
+    border: 2px solid #e6b8af; /* Lighter border */
+    position: relative; /* For pseudo-elements or future additions */
+    z-index: 1;
+    color: #374151; /* Dark text color */
+    user-select: none; /* Prevent text selection */
+}
+/* Responsive font size for cards */
+@media (max-width: 400px) {
+    .card { font-size: 1.2rem; }
+}
+@media (max-width: 350px) {
+    .card { font-size: 1rem; }
+}
+
+.card:hover:not(.face-up):not(.blocked) { /* Hover only on face-down, non-blocked */
+    transform: scale(1.08) rotate(1deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    animation: none; /* Stop other animations on hover */
+}
+
+.card.face-up {
+    background-color: #ffffff;
+    border-color: #d1d5db; /* Gray-300 */
+    cursor: default; /* No pointer on face-up cards */
+}
+
+.card.correct {
+    background-color: #86efac; /* Green-300 */
+    border-color: #34d399; /* Green-400 */
+    color: #065f46; /* Green-800 */
+    animation: pulse 1.5s infinite;
+}
+
+.card.wrong {
+    background-color: #fca5a5; /* Red-300 */
+    border-color: #ef4444; /* Red-500 */
+    color: #b91c1c; /* Red-800 */
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    100% { transform: scale(1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25%, 75% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+}
+
+#message-box {
+    margin-top: 0.5rem; /* Reduced margin */
+    font-size: 0.9rem;
+    color: #ffffff; /* White text */
+    text-align: center;
+    min-height: 2em; /* Use em for relative height */
+    width: 90%;
+    max-width: 450px;
+    padding: 0.5rem;
+    background-color: rgba(55, 65, 81, 0.7); /* Gray-700 semi-transparent */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    z-index: 3; /* Above board */
+}
+
+.hidden { /* Utility class */
+    display: none !important;
+}
+
+/* Game Over Styles */
+.game-over-overlay {
+    position: fixed;
+    inset: 0; /* Covers entire viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+    z-index: 10;
+    padding: 1rem; /* Padding for smaller screens */
+}
+
+.game-over-content {
+    background-color: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.2rem; /* Larger text */
+    color: #374151; /* Gray-700 */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.game-over-content button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: #f59e0b; /* Amber */
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+}
+.game-over-content button:hover {
+    background-color: #d97706; /* Darker Amber */
+}
+
+/* Control Styles */
+#board-size-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin-bottom: 1rem; Removed, using gap in container */
+}
+#board-size-select {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    font-family: 'Press Start 2P', cursive;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 2px solid #f59e0b; /* Amber border */
+    background-color: #ffffff;
+    color: #374151;
+}
+#board-size-value {
+    margin-top: 0.3rem; /* Added small margin */
+    font-size: 0.7rem;
+    color: #374151; /* Gray-700 */
+}
+
+#mark-mode-container, #block-mode-container {
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 1rem; Removed, using gap in container */
+    /* z-index: 2; Controlled by parent */
+}
+#mark-mode-checkbox, #block-mode-checkbox {
+    margin-right: 0.5rem;
+    cursor: pointer;
+    width: 16px; /* Explicit size */
+    height: 16px; /* Explicit size */
+    accent-color: #f59e0b; /* Style checkbox color */
+}
+#mark-mode-label, #block-mode-label {
+    font-size: 0.8rem;
+    color: #374151; /* Gray-700 */
+    cursor: pointer;
+    user-select: none; /* Prevent text selection */
+}
+
+/* Card State Styles */
+.card.marked {
+    background-color: #a7f3d0; /* Green-200 */
+    border-color: #34d399; /* Green-400 */
+}
+.card.mark-hover:hover:not(.face-up):not(.blocked) { /* Specific hover for marking */
+    background-color: #6ee7b7; /* Green-300 */
+    border-color: #10b981; /* Green-500 */
+    transform: scale(1.08) rotate(1deg); /* Keep consistent hover */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.card.blocked {
+    background-color: #fca5a5; /* Red-300 */
+    border-color: #ef4444; /* Red-500 */
+    cursor: not-allowed; /* Indicate blocked */
+    /* Add visual indication like diagonal lines */
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(185, 28, 28, 0.3), /* Red-800 semi-transparent */
+        rgba(185, 28, 28, 0.3) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+}
+.card.block-hover:hover:not(.face-up) { /* Specific hover for blocking */
+    background-color: #f87171; /* Red-400 */
+    border-color: #dc2626; /* Red-600 */
+    transform: scale(1.08) rotate(1deg); /* Keep consistent hover */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    /* Ensure stripes remain visible */
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(185, 28, 28, 0.4), /* Slightly darker stripes */
+        rgba(185, 28, 28, 0.4) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+}
+
+/* Ensure blocked appearance overrides other states if needed */
+.card.blocked.marked {
+     background-color: #fca5a5 !important;
+     border-color: #ef4444 !important;
+}

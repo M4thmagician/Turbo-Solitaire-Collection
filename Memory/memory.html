@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Memory Solitaire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- External CSS for game styles -->
+    <link rel="stylesheet" href="memory.css">
+</head>
+<body class="bg-green-700 flex flex-col items-center justify-center min-h-screen p-4">
+    <h1 class="text-3xl text-white mb-4 text-center">Sequence Memory Solitaire</h1>
+    <div id="message-area" class="text-xl text-yellow-300 mb-6 h-8 text-center">
+        Find the Ace!
+    </div>
+    <div id="game-board" class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-3 justify-center mb-6" data-locked="false">
+    </div>
+    <button id="new-game-button">New Game</button>
+    <a href="../index.html" id="back-to-menu" class="back-button">Back to Menu</a>
+    <!-- Link to the main JavaScript module -->
+    <script type="module" src="memory.js"></script>
+</body>
+</html>

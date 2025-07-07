@@ -1,0 +1,272 @@
+/* css/styles.css */
+body {
+    font-family: 'Press Start 2P', cursive;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Light grey background */
+}
+
+.game-container {
+    width: 95%;
+    max-width: 500px; /* Responsive width */
+    padding: 1rem;
+    text-align: center;
+    background-color: #81d4fa; /* Light blue background */
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+h1 {
+    font-size: 1.5rem; /* Responsive font size */
+    margin-bottom: 0.5rem;
+    color: #1a5276; /* Darker blue */
+}
+@media (min-width: 640px) {
+  h1 {
+     font-size: 2.5rem;
+  }
+}
+
+#card-grid {
+    display: grid;
+    /* grid-template-columns will be set by JS */
+    gap: 0.5rem; /* Space between cards */
+    margin-bottom: 1rem;
+}
+ @media (min-width: 640px) {
+    #card-grid {
+        gap: 1rem; /* Space between cards */
+    }
+}
+
+.card {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%; /* Maintain square aspect ratio */
+            background-color: #ffeb3b; /* Yellow card back */
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem; /* Responsive font size */
+            cursor: pointer;
+            transition: transform 0.6s;
+            position: relative; /* For absolute positioning of content */
+            perspective: 1000px; /* Needed for 3D flip effect */
+            transform-style: preserve-3d
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    backface-visibility: hidden;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+     .card-face {
+        font-size: 1.5rem;
+    }
+}
+
+.card-front {
+    background-color: #ffeb3b; /* Yellow back */
+    transform: rotateY(0deg);
+    backface-visibility: hidden
+}
+
+.card-back {
+    background-color: #fff; /* White front */
+    color: #000;
+    transform: rotateY(180deg); /* Start rotated */
+    backface-visibility: hidden
+}
+
+/* Style for marked cards (applied to the front face for visibility) */
+.card.marked .card-front {
+     background-color: #81c784; /* Green */
+}
+
+/* Hover effect only when not flipped */
+.card:not(.flipped):hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+/* Marking mode hover effect (applied to the front face for visibility) */
+.card.marking-mode-hover .card-front {
+    background-color: #b2ebf2;
+}
+
+/* Jiggle animation only when not flipped */
+.card:not(.flipped).jiggle {
+  animation: jiggle 0.3s infinite;
+}
+@keyframes jiggle {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(0deg) scale(1); }
+  75% { transform: rotate(3deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.win-message {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #4caf50; /* Green for win */
+}
+ @media (min-width: 640px) {
+     .win-message {
+        font-size: 1.5rem;
+    }
+ }
+
+.reset-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    background-color: #f57c00; /* Orange button */
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.game-actions { /* Styles for the button container */
+    display: flex;         /* Arrange buttons side-by-side */
+    justify-content: center; /* Center the buttons */
+    align-items: center;   /* Vertically align */
+    gap: 1rem;             /* Space between buttons */
+    margin-top: 1rem;      /* Space above the buttons */
+    flex-wrap: wrap;       /* Allow buttons to wrap on small screens */
+}
+
+.back-button {
+    display: inline-block; /* Allow padding and margin */
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    background-color: #60a5fa; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 0.5rem; /* Match reset button */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Remove underline from link */
+    text-align: center;
+}
+
+/* Consistent responsive size */
+@media (min-width: 640px) {
+    .back-button  {
+        font-size: 0.8rem;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+.back-button:hover {
+    background-color: #3b82f6; /* Darker blue on hover */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Ensure no underline on hover */
+    color: white; /* Ensure text remains white */
+}
+
+@media (min-width: 640px) {
+    .reset-button  {
+        font-size: 0.8rem;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+.reset-button:hover {
+    background-color: #e65100; /* Darker orange on hover */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-container {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.settings-title {
+    font-size: 0.8rem;
+    color: #1a5276;
+    margin-bottom: 0.5rem;
+}
+
+#board-size-select {
+    width: 120px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    margin-bottom: 1rem;
+    font-family: 'Press Start 2P', cursive;
+}
+
+#marking-mode-checkbox {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+.marking-mode-label {
+    font-size: 0.7rem;
+    color: #1a5276;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#stats-container {
+    margin-left: 1rem;
+    padding: 1rem;
+    background-color: #e0f7fa;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    width: 200px;
+    font-size: 0.7rem;
+    color: #1a5276;
+    align-self: flex-start;
+}
+
+#stats-container h2 {
+    font-size: 0.9rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #1a5276;
+}
+
+#stats-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+#stats-container li {
+    margin-bottom: 0.25rem;
+}
+
+#stats-container p {
+    font-weight: bold;
+    margin: 0;
+}
