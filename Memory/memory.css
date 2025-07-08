@@ -35,6 +35,9 @@ body:has(#game-board[data-locked="true"]) .card.revealed[data-rank="A"] {
 body:not(:has(#game-board[data-locked="true"])) .card.revealed[data-rank="A"] {
     cursor: default;
 }
+/* Suit colors */
+.suit-red { color: #ef4444; } /* Red */
+.suit-black { color: #000000; } /* Black */
 
 .card.correct {
     background-color: #f0f0f0;
